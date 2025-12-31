@@ -90,6 +90,10 @@
             pointer-events: none;
             transition: all 0.3s;
         }
+        #skip-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
 
         /* === HOME STUDIO LAYER === */
         #studio-layer { 
@@ -108,6 +112,7 @@
             opacity: 1; 
         }
 
+        /* BACKGROUND IMAGE WITH ANIMATED OVERLAY */ 
         .bg-layer { 
             position: absolute; 
             top: 0; 
@@ -115,8 +120,30 @@
             width: 100%; 
             height: 100%; 
             z-index: 0; 
-            background: url('/Loumans--Spark/assets/home_concept.jpg') no-repeat center center; 
+            background: url('assets/home_concept.jpg') no-repeat center center; 
             background-size: cover; 
+        }
+
+        /* Animated colorful overlay on top of background image */
+        .bg-layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 242, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 0, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 10% 80%, rgba(255, 94, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 20%, rgba(0, 255, 55, 0.08) 0%, transparent 50%);
+            animation: colorPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes colorPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
 
         #entrance-canvas { 
@@ -132,8 +159,8 @@
         /* === THE FANTASY PORTALS === */ 
         .hotspot { 
             position: absolute; 
-            width: 180px; 
-            height: 180px; 
+            width: 200px; 
+            height: 200px; 
             border-radius: 50%; 
             display: flex; 
             flex-direction: column; 
@@ -143,44 +170,189 @@
             opacity: 0; 
             cursor: pointer;
             z-index: 9999; 
-            pointer-events: auto !important;
+            pointer-events: none;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(0, 0, 0, 0.6); 
-            border: 3px solid currentColor; 
-            box-shadow: 0 0 30px currentColor, inset 0 0 20px currentColor; 
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.7); 
+            border: 4px solid currentColor; 
+            box-shadow: 0 0 40px currentColor, inset 0 0 30px currentColor; 
+            backdrop-filter: blur(8px);
+        }
+        
+        .hotspot::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.2;
+            filter: blur(10px);
+            animation: portalPulse 3s ease-in-out infinite;
         }
 
-        /* POSITIONING - OPTION 2 */
-        #screen-left-top { top: 15%; left: 10%; color: var(--col-lib); }
-        #screen-left-bot { bottom: 15%; left: 10%; color: var(--col-pulse); }
-        #screen-right-top { top: 15%; right: 10%; color: var(--col-work); }
-        #screen-right-bot { bottom: 15%; right: 10%; color: var(--col-sensi); }
-        
-        /* THE YIN-YANG PORTAL: Moved down and right of the background symbol */
-        #screen-yinyang { 
-            top: 25%; 
-            right: 18%; 
-            color: #00d4ff; 
-            width: 160px;
-            height: 160px;
+        @keyframes portalPulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.1); opacity: 0.4; }
         }
+        
+        /* COLORS */
+        #screen-left-top { color: var(--col-lib); }
+        #screen-left-bot { color: var(--col-pulse); }
+        #screen-right-top { color: var(--col-work); }
+        #screen-right-bot { color: var(--col-sensi); }
+        #screen-yinyang { color: #00d4ff; }
+
+        .hotspot:hover { 
+            transform: scale(1.2) rotate(5deg); 
+            background: rgba(0,0,0,0.85);
+            box-shadow: 0 0 60px currentColor, inset 0 0 40px currentColor;
+            filter: brightness(1.2);
+        }
+
+        /* POSITIONING - Aligned with background image */
+        #screen-left-top { top: 12%; left: 8%; }
+        #screen-left-bot { bottom: 30%; left: 1%; }
+        #screen-right-top { top: 20%; right: 12%; }
+        #screen-right-bot { bottom: 20%; right: 4%; }
+        #screen-yinyang { top: 18%; right: 20%; width: 180px; height: 180px; }
 
         /* TEXT STYLING */
         .hotspot-title { 
             font-family: 'MedievalSharp', cursive; 
-            font-size: 20px; 
+            font-size: clamp(18px, 3vw, 24px);
             font-weight: bold;
-            margin-bottom: 4px; 
+            margin-bottom: 8px; 
+            pointer-events: none; 
             color: inherit; 
-            text-shadow: 0 0 15px currentColor;
+            text-shadow: 0 0 20px currentColor;
+            filter: drop-shadow(0 0 10px currentColor);
         } 
         .hotspot-subtitle { 
             font-family: 'MedievalSharp', cursive; 
-            font-size: 12px; 
-            letter-spacing: 1px; 
+            font-size: clamp(11px, 2vw, 13px);
+            letter-spacing: 2px; 
+            pointer-events: none; 
             color: inherit; 
             opacity: 0.9;
+        }
+
+        /* === CONTENT STYLING === */
+        .section-label { 
+            color: var(--gold); 
+            font-size: 10px; 
+            letter-spacing: 3px; 
+            text-transform: uppercase; 
+            margin-bottom: 15px; 
+            opacity: 0.9; 
+        }
+        .story-title { 
+            font-family: 'Cinzel', serif; 
+            font-size: 34px; 
+            color: var(--gold); 
+            margin: 25px 0 30px; 
+            line-height: 1.3; 
+        }
+        .whisper { 
+            border-left: 4px solid var(--gold); 
+            padding-left: 25px; 
+            font-style: italic; 
+            color: #fff; 
+            margin-bottom: 35px; 
+            font-size: 20px; 
+            line-height: 1.6; 
+        }
+        .insight-box { 
+            background: rgba(255, 255, 255, 0.04); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 28px; 
+            border-radius: 10px; 
+            margin-bottom: 30px; 
+            line-height: 1.8; 
+            color: #ccc; 
+            transition: all 0.3s; 
+        }
+        .insight-box:hover { 
+            background: rgba(255, 255, 255, 0.06); 
+            border-color: rgba(212, 175, 55, 0.3); 
+            transform: translateY(-2px);
+        }
+        .tabs { 
+            display: flex; 
+            gap: 35px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
+            padding-bottom: 15px; 
+            margin: 35px 0 30px; 
+        }
+        .tab { 
+            cursor: none; 
+            font-size: 13px; 
+            letter-spacing: 2px; 
+            opacity: 0.4; 
+            transition: all 0.3s; 
+            padding-bottom: 15px; 
+            position: relative; 
+        }
+        .tab::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -16px; 
+            left: 0; 
+            width: 100%; 
+            height: 2px; 
+            background: var(--gold); 
+            transform: scaleX(0); 
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .tab.active { 
+            opacity: 1; 
+            color: var(--gold); 
+        }
+        .tab.active::after { 
+            transform: scaleX(1); 
+        }
+        .filter-tags { 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+            margin-bottom: 35px; 
+            flex-wrap: wrap; 
+        }
+        .tag { 
+            padding: 10px 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 20px; 
+            cursor: none; 
+            font-size: 11px; 
+            letter-spacing: 1px; 
+            transition: all 0.3s; 
+            background: rgba(255, 255, 255, 0.03); 
+        }
+        .tag.active { 
+            border-color: var(--gold); 
+            color: var(--gold); 
+            background: rgba(212, 175, 55, 0.1); 
+        }
+        .primary-btn { 
+            background: linear-gradient(135deg, var(--gold), #C99D2E); 
+            color: #000; 
+            border: none; 
+            padding: 18px 40px; 
+            font-weight: 600; 
+            font-size: 13px; 
+            letter-spacing: 2px; 
+            margin-top: 30px; 
+            cursor: none; 
+            border-radius: 25px; 
+            transition: all 0.3s; 
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.3); 
+            font-family: 'Space Grotesk', sans-serif; 
+            pointer-events: auto; 
+        }
+        .primary-btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 35px rgba(212, 175, 55, 0.5); 
         }
 
         /* === OVERLAY & CURSOR === */ 
@@ -198,8 +370,22 @@
             overflow: hidden;
             box-shadow: 0 -10px 50px rgba(212, 175, 55, 0.3);
         } 
-        #alchemy-overlay.open { bottom: 0; } 
-        
+        #alchemy-overlay.open { 
+            bottom: 0; 
+        } 
+        .overlay-header { 
+            padding: 35px 45px 25px; 
+            position: relative; 
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+            background: rgba(0, 0, 0, 0.5); 
+        }
+        .overlay-header-title { 
+            font-family: 'Cinzel', serif; 
+            color: var(--gold); 
+            letter-spacing: 3px; 
+            font-size: 12px; 
+            text-transform: uppercase; 
+        }
         .close-btn { 
             position: absolute; 
             top: 20px; 
@@ -209,19 +395,115 @@
             color: var(--gold); 
             cursor: pointer; 
             pointer-events: auto; 
-            border-radius: 20px;
+            border-radius: 20px; 
+            font-family: 'Space Grotesk';
+            transition: all 0.3s;
+        }
+        .close-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        .overlay-content { 
+            padding: 60px; 
+            color: #eee; 
+            height: calc(100% - 80px); 
+            overflow-y: auto; 
+        }
+        .overlay-content::-webkit-scrollbar { 
+            width: 10px; 
+        }
+        .overlay-content::-webkit-scrollbar-thumb { 
+            background: var(--gold); 
+            border-radius: 5px; 
         }
 
-        .overlay-content { padding: 60px; color: #eee; height: calc(100% - 80px); overflow-y: auto; }
-
-        #cursor, #cursor-ring { position: fixed; pointer-events: none; z-index: 10001; border-radius: 50%; transform: translate(-50%, -50%); mix-blend-mode: screen; } 
-        #cursor { width: 10px; height: 10px; background: var(--gold); } 
-        #cursor-ring { width: 40px; height: 40px; border: 2px solid var(--gold); transition: width 0.3s, height 0.3s; } 
+        #cursor, #cursor-ring { 
+            position: fixed; 
+            pointer-events: none; 
+            z-index: 10001; 
+            border-radius: 50%; 
+            transform: translate(-50%, -50%); 
+            transition: transform 0.1s; 
+            mix-blend-mode: screen; 
+        } 
+        #cursor { 
+            width: 10px; 
+            height: 10px; 
+            background: var(--gold); 
+            box-shadow: 0 0 10px var(--gold);
+        } 
+        #cursor-ring { 
+            width: 40px; 
+            height: 40px; 
+            border: 2px solid var(--gold); 
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        } 
+        body.hovering #cursor { 
+            transform: scale(2) translate(-25%, -25%); 
+        }
+        body.hovering #cursor-ring { 
+            transform: scale(1.5) translate(-33%, -33%); 
+        }
+        @keyframes pulse { 
+            0%, 100% { opacity: 0.6; transform: scale(1); } 
+            50% { opacity: 1; transform: scale(1.02); } 
+        }
         
-        @keyframes pulse { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.02); } }
-        
-        /* Portal Hover Effect */
-        .hotspot:hover { transform: scale(1.1); background: rgba(0,0,0,0.8); }
+        /* === MOBILE RESPONSIVE === */
+        @media (max-width: 768px) {
+            .begin-text {
+                font-size: 18px;
+                padding: 15px 30px;
+            }
+            
+            .hotspot {
+                width: 140px;
+                height: 140px;
+                position: relative !important;
+                margin: 15px auto;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+            }
+            
+            #studio-layer {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+                overflow-y: auto;
+            }
+            
+            .bg-layer {
+                position: fixed;
+            }
+            
+            #entrance-canvas {
+                display: none;
+            }
+            
+            .overlay-content {
+                padding: 30px 20px;
+            }
+            
+            .whisper {
+                font-size: 16px;
+            }
+            
+            .story-title {
+                font-size: 26px;
+            }
+            
+            * {
+                cursor: auto !important;
+            }
+            
+            #cursor, #cursor-ring {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -230,19 +512,19 @@
     <div id="begin-overlay" onclick="startSequence()">
         <div class="begin-text">CLICK TO ENTER THE SPARK</div>
     </div>
-    <audio id="bg-music"><source src="/Loumans--Spark/assets/music.mp3" type="audio/mp3"></audio>
+    <audio id="bg-music"><source src="assets/music.mp3" type="audio/mp3"></audio>
 
     <div id="stage-1" class="stage active">
-        <video id="vid-1" muted playsinline><source src="/Loumans--Spark/assets/LOGOVID1.mp4" type="video/mp4"></video>
+        <video id="vid-1" muted playsinline><source src="assets/LOGOVID1.mp4" type="video/mp4"></video>
     </div>
     <div id="stage-2" class="stage">
-        <video id="vid-2" muted playsinline><source src="/Loumans--Spark/assets/entrance.mp4" type="video/mp4"></video>
+        <video id="vid-2" muted playsinline><source src="assets/entrance.mp4" type="video/mp4"></video>
     </div>
     <div id="stage-3" class="stage">
-        <img src="/Loumans--Spark/assets/LOUM.jpeg" alt="Louman">
+        <img src="assets/LOUM.jpeg" alt="Louman">
     </div>
     <div id="stage-4" class="stage">
-        <video id="vid-4" playsinline><source src="/Loumans--Spark/assets/intro.mp4" type="video/mp4"></video>
+        <video id="vid-4" playsinline><source src="assets/intro.mp4" type="video/mp4"></video>
         <button id="skip-btn" onclick="skipIntro()">SKIP INTRO</button>
     </div>
 
@@ -251,7 +533,7 @@
         <div class="bg-layer"></div>
 
         <div id="screen-yinyang" class="hotspot" onclick="openOverlay('host')">
-            <div class="hotspot-title">Live Sessions</div>
+            <div class="hotspot-title" style="font-size: 20px;">Live Sessions</div>
             <div class="hotspot-subtitle">with Louman</div>
         </div>
 
@@ -271,6 +553,7 @@
 
     <div id="alchemy-overlay">
         <div class="overlay-header">
+            <div class="overlay-header-title">TRANSMISSION</div>
             <button class="close-btn" onclick="closeOverlay()">CLOSE X</button>
         </div>
         <div class="overlay-content" id="overlay-content"></div>
@@ -290,59 +573,474 @@
             if(num < 3) {
                 const vid = stage.querySelector('video');
                 vid.play();
-                vid.onended = () => { stage.classList.remove('active'); playStage(num+1); };
+                vid.onended = () => { 
+                    stage.classList.remove('active'); 
+                    playStage(num+1); 
+                };
             } else if (num === 3) {
-                setTimeout(() => { stage.classList.remove('active'); playStage(4); }, 3000);
+                setTimeout(() => { 
+                    stage.classList.remove('active'); 
+                    playStage(4); 
+                }, 3000);
             } else {
                 const vid = stage.querySelector('video');
                 document.getElementById('skip-btn').style.opacity = 1; 
                 document.getElementById('skip-btn').style.pointerEvents = 'auto';
                 gsap.to(music, {volume: 0.1, duration: 2}); 
+                vid.volume = 1.0; 
                 vid.play();
                 vid.onended = revealStudio;
             }
         }
-        function skipIntro() { document.getElementById('vid-4').pause(); revealStudio(); }
+        function skipIntro() { 
+            document.getElementById('vid-4').pause(); 
+            revealStudio(); 
+        }
         function revealStudio() {
             document.getElementById('stage-4').style.display = 'none'; 
             document.getElementById('studio-layer').classList.add('active');
-            gsap.to('.hotspot', { opacity: 1, duration: 1.2, stagger: 0.2, ease: "power2.out" });
-            initParticles(); animateParticles();
+            gsap.to(music, {volume: 0.5, duration: 2});
+            
+            document.querySelectorAll('.hotspot').forEach(h => h.style.pointerEvents = 'auto');
+            
+            gsap.to('.hotspot', {
+                opacity: 1, 
+                duration: 1.2, 
+                stagger: 0.25,
+                ease: "power2.out",
+                onComplete: () => {
+                    gsap.to('.hotspot', {
+                        y: '+=10',
+                        duration: 2,
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut",
+                        stagger: 0.15
+                    });
+                }
+            });
+            initParticles(); 
+            animateParticles();
         }
 
         const contentData = {
-            'gallery': '<h1>The Proof</h1><p>Work content here...</p>',
-            'library': '<h1>Perspective</h1><p>Library content here...</p>',
-            'blog': '<h1>The Pulse</h1><p>Blog content here...</p>',
-            'host': '<h1>Live Sessions</h1><p>Booking content here...</p>',
-            'sensi': '<h1>SENSiiii</h1><p>Creations here...</p>'
+            'gallery': `
+                <div class="filter-tags">
+                    <span class="tag active" onclick="filterContent(this, 'all')">ALL</span>
+                    <span class="tag" onclick="filterContent(this, 'life')">LIFE</span>
+                    <span class="tag" onclick="filterContent(this, 'work')">WORK</span>
+                    <span class="tag" onclick="filterContent(this, 'fun')">FUN</span>
+                </div>
+                <div class="section-label">THE WHISPER</div>
+                <div class="whisper">"See you at 3:00pm... oh yeah, I'm going to Cebu Island this week."</div>
+                <div class="section-label">WHAT I NOTICED (THE ALCHEMY)</div>
+                <div class="insight-box">
+                    Behind the text, I felt 11 years of guilt. He wasn't just going on a trip; he was looking for forgiveness. I didn't coach him. I wrote a story where the waterfall spoke to him.
+                </div>
+                <div class="tabs">
+                    <span class="tab active" onclick="switchTab(this, 'read')">READ</span>
+                    <span class="tab" onclick="switchTab(this, 'listen')">LISTEN</span>
+                    <span class="tab" onclick="switchTab(this, 'watch')">WATCH</span>
+                </div>
+                <div id="tab-content">
+                    <h1 class="story-title">The Waterfall That Waited</h1>
+                    <div style="line-height: 1.9; color: #ccc;">
+                        He walked into the water. The cold hit him like a shock. And the voice said: "You didn't need magic. You needed a mirror."<br><br>
+                        The waterfall remembered his footsteps. It listened as he approached. Not with ears—but with soft water and morning light.
+                    </div>
+                </div>
+                <button class="primary-btn">DOWNLOAD STORY ($5)</button>
+            `,
+            'library': `
+                <div class="section-label">SENSiiii LIBRARY</div>
+                <div class="whisper">"What if I failed?" → "What if you succeeded?"</div>
+                <div class="insight-box">The Library contains perspective pairs that shift fixation into fluidity. Each question reveals where someone is stuck—and offers the view from the other side. <strong style="color: var(--gold);">Click any card to flip the perspective.</strong></div>
+                <div class="section-label" style="margin-top: 40px;">PERSPECTIVE PAIRS</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 25px;">
+                    <div class="insight-box" style="cursor: pointer; position: relative;" onclick="flipPerspective(this)" data-original="What if I fail?" data-alt="What if I succeed?" data-flipped="false">
+                        <div class="perspective-text" style="font-size: 18px; color: var(--gold); font-weight: 600;">What if I fail?</div>
+                        <div style="font-size: 11px; margin-top: 10px; opacity: 0.6;">Click to shift perspective →</div>
+                    </div>
+                    <div class="insight-box" style="cursor: pointer;" onclick="flipPerspective(this)" data-original="What if they reject me?" data-alt="What if they embrace me?" data-flipped="false">
+                        <div class="perspective-text" style="font-size: 18px; color: var(--gold); font-weight: 600;">What if they reject me?</div>
+                        <div style="font-size: 11px; margin-top: 10px; opacity: 0.6;">Click to shift perspective →</div>
+                    </div>
+                    <div class="insight-box" style="cursor: pointer;" onclick="flipPerspective(this)" data-original="What if I'm not ready?" data-alt="What if I'm more ready than I think?" data-flipped="false">
+                        <div class="perspective-text" style="font-size: 18px; color: var(--gold); font-weight: 600;">What if I'm not ready?</div>
+                        <div style="font-size: 11px; margin-top: 10px; opacity: 0.6;">Click to shift perspective →</div>
+                    </div>
+                    <div class="insight-box" style="cursor: pointer;" onclick="flipPerspective(this)" data-original="What if I lose everything?" data-alt="What if I gain everything?" data-flipped="false">
+                        <div class="perspective-text" style="font-size: 18px; color: var(--gold); font-weight: 600;">What if I lose everything?</div>
+                        <div style="font-size: 11px; margin-top: 10px; opacity: 0.6;">Click to shift perspective →</div>
+                    </div>
+                </div>
+            `,
+            'blog': `
+                <div class="section-label">LATEST PULSE</div>
+                <div class="whisper">Today's thought: Stop waiting for the perfect moment.</div>
+                <div class="insight-box">The blog is where sparks become thoughts become invitations. No funnel. No pressure. Just presence with what's emerging.</div>
+                <div style="margin-top: 35px; line-height: 1.9; color: #ccc;">Recent posts appear here. Each one is a window into the work—not a pitch, not a lesson, just... connection.</div>
+            `,
+            'host': `
+                <div class="section-label">THE PRESENCE</div>
+                <div class="whisper">Ready to drive the conversation?</div>
+                <div class="insight-box">Live sessions where we collaborate in the moment. Sometimes structured, sometimes free. Always responsive to what's actually here.</div>
+                <div class="section-label" style="margin-top: 40px;">AVAILABLE SESSIONS</div>
+                <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 25px;">
+                    <div class="insight-box" style="border-left: 3px solid var(--gold);"><strong style="color: var(--gold);">Free Talk Method</strong><br>A conversation sparked by a random word.</div>
+                    <div class="insight-box" style="border-left: 3px solid var(--gold);"><strong style="color: var(--gold);">Custom Creation</strong><br>Bring your spark. We'll collaborate.</div>
+                </div>
+                <button class="primary-btn">BOOK A SESSION</button>
+            `,
+            'sensi': `
+                <div class="section-label">SENSiiii CREATIONS</div>
+                <div class="whisper">The formula in action. Each creation is a Spark made manifest.</div>
+                <div class="insight-box">Click any card to reveal the alchemy behind it.</div>
+                
+                <div style="margin-top: 50px; position: relative; min-height: 400px;">
+                    <div class="alchemical-deck">
+                        <div class="alchemy-card" style="--index: 0;" onclick="expandCard(this)">
+                            <div class="card-number">01</div>
+                            <div class="card-title">The Mirror Method</div>
+                            <div class="card-type">PERSONAL TRANSFORMATION</div>
+                            <div class="card-expanded">
+                                <p style="margin: 20px 0; line-height: 1.8;">A reflective practice that turns self-doubt into self-discovery. Created for a client who couldn't see their own potential.</p>
+                                <div style="padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 15px;">
+                                    <strong style="color: var(--gold);">The Spark:</strong> "What if the thing I'm running from is what I need most?"
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alchemy-card" style="--index: 1;" onclick="expandCard(this)">
+                            <div class="card-number">02</div>
+                            <div class="card-title">Fluid Identity Framework</div>
+                            <div class="card-type">BUSINESS STRATEGY</div>
+                            <div class="card-expanded">
+                                <p style="margin: 20px 0; line-height: 1.8;">A strategic approach that helps brands stay authentic while evolving. For companies stuck between who they were and who they're becoming.</p>
+                                <div style="padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 15px;">
+                                    <strong style="color: var(--gold);">The Spark:</strong> "What if consistency isn't staying the same?"
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alchemy-card" style="--index: 2;" onclick="expandCard(this)">
+                            <div class="card-number">03</div>
+                            <div class="card-title">The Resonance Ritual</div>
+                            <div class="card-type">CREATIVE PRACTICE</div>
+                            <div class="card-expanded">
+                                <p style="margin: 20px 0; line-height: 1.8;">A daily practice for artists and creators to find their authentic voice. Born from a conversation about creative block.</p>
+                                <div style="padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 15px;">
+                                    <strong style="color: var(--gold);">The Spark:</strong> "What if inspiration isn't something you wait for?"
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alchemy-card" style="--index: 3;" onclick="expandCard(this)">
+                            <div class="card-number">04</div>
+                            <div class="card-title">The Threshold Experience</div>
+                            <div class="card-type">LIFE TRANSITIONS</div>
+                            <div class="card-expanded">
+                                <p style="margin: 20px 0; line-height: 1.8;">A guided journey through major life changes. Created for those standing at the edge of something new.</p>
+                                <div style="padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 15px;">
+                                    <strong style="color: var(--gold);">The Spark:</strong> "What if the ending is also a beginning?"
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <style>
+                    .alchemical-deck {
+                        position: relative;
+                        width: 100%;
+                        max-width: 600px;
+                        margin: 0 auto;
+                        perspective: 1000px;
+                    }
+                    
+                    .alchemy-card {
+                        position: absolute;
+                        width: 100%;
+                        padding: 30px;
+                        background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(40, 40, 40, 0.95));
+                        border: 2px solid rgba(212, 175, 55, 0.3);
+                        border-radius: 15px;
+                        cursor: pointer;
+                        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                        transform-origin: bottom center;
+                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+                    }
+                    
+                    .alchemy-card:not(.expanded) {
+                        top: calc(var(--index) * 25px);
+                        transform: translateY(calc(var(--index) * -5px)) scale(calc(1 - var(--index) * 0.05));
+                        opacity: calc(1 - var(--index) * 0.15);
+                        z-index: calc(10 - var(--index));
+                    }
+                    
+                    .alchemy-card.expanded {
+                        position: relative;
+                        top: 0;
+                        transform: translateY(0) scale(1.05);
+                        z-index: 100;
+                        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+                        border-color: var(--gold);
+                    }
+                    
+                    .alchemy-card:hover:not(.expanded) {
+                        transform: translateY(calc(var(--index) * -5px - 10px)) scale(calc(1 - var(--index) * 0.05));
+                        border-color: rgba(212, 175, 55, 0.6);
+                    }
+                    
+                    .card-number {
+                        position: absolute;
+                        top: 15px;
+                        right: 20px;
+                        font-family: 'Cinzel', serif;
+                        font-size: 48px;
+                        color: rgba(212, 175, 55, 0.2);
+                        font-weight: 700;
+                    }
+                    
+                    .card-title {
+                        font-family: 'Cinzel', serif;
+                        font-size: 26px;
+                        color: var(--gold);
+                        margin-bottom: 10px;
+                    }
+                    
+                    .card-type {
+                        font-size: 11px;
+                        letter-spacing: 3px;
+                        color: rgba(255, 255, 255, 0.5);
+                        text-transform: uppercase;
+                        margin-bottom: 15px;
+                    }
+                    
+                    .card-expanded {
+                        max-height: 0;
+                        overflow: hidden;
+                        opacity: 0;
+                        transition: all 0.5s ease;
+                    }
+                    
+                    .alchemy-card.expanded .card-expanded {
+                        max-height: 500px;
+                        opacity: 1;
+                        margin-top: 20px;
+                    }
+                    
+                    @media (max-width: 768px) {
+                        .alchemical-deck {
+                            max-width: 100%;
+                        }
+                        
+                        .alchemy-card {
+                            padding: 20px;
+                        }
+                        
+                        .card-title {
+                            font-size: 20px;
+                        }
+                        
+                        .card-number {
+                            font-size: 36px;
+                        }
+                    }
+                </style>
+            `
         };
 
         function openOverlay(type) {
-            document.getElementById('overlay-content').innerHTML = contentData[type];
+            const content = document.getElementById('overlay-content');
+            content.innerHTML = contentData[type];
+            gsap.fromTo(content.children, 
+                { opacity: 0, y: 30 }, 
+                { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, delay: 0.3, ease: "power2.out" }
+            );
             document.getElementById('alchemy-overlay').classList.add('open');
+            gsap.to(music, {volume: 0.2, duration: 1});
         }
-        function closeOverlay() { document.getElementById('alchemy-overlay').classList.remove('open'); }
+        
+        function closeOverlay() { 
+            document.getElementById('alchemy-overlay').classList.remove('open');
+            gsap.to(music, {volume: 0.5, duration: 1});
+            const bgLayer = document.querySelector('.bg-layer');
+            gsap.to(bgLayer, {filter: 'grayscale(0) brightness(1)', duration: 1});
+        }
+        
+        function switchTab(el, mode) { 
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); 
+            el.classList.add('active');
+            
+            const bgLayer = document.querySelector('.bg-layer');
+            if(mode === 'listen' || mode === 'watch') {
+                gsap.to(bgLayer, {filter: 'grayscale(0.7) brightness(0.6)', duration: 1});
+            } else {
+                gsap.to(bgLayer, {filter: 'grayscale(0) brightness(1)', duration: 1});
+            }
+            
+            const tabContentEl = document.getElementById('tab-content');
+            if(tabContentEl) {
+                const tabContent = {
+                    'read': `
+                        <h1 class="story-title">The Waterfall That Waited</h1>
+                        <div style="line-height: 1.9; color: #ccc;">
+                            He walked into the water. The cold hit him like a shock. And the voice said: "You didn't need magic. You needed a mirror."<br><br>
+                            The waterfall remembered his footsteps. It listened as he approached. Not with ears—but with soft water and morning light.
+                        </div>
+                    `,
+                    'listen': `
+                        <h1 class="story-title">Audio Experience</h1>
+                        <div style="text-align: center; padding: 40px;">
+                            <div style="width: 100%; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 40px; display: flex; align-items: center; justify-content: center; margin: 20px 0;">
+                                <span style="color: var(--gold); font-size: 14px; letter-spacing: 2px;">🎧 AUDIO PLAYER COMING SOON</span>
+                            </div>
+                            <p style="color: #999; margin-top: 20px;">Listen to the story narrated with ambient soundscapes.</p>
+                        </div>
+                    `,
+                    'watch': `
+                        <h1 class="story-title">Visual Journey</h1>
+                        <div style="text-align: center; padding: 40px;">
+                            <div style="width: 100%; height: 300px; background: rgba(0, 0, 0, 0.5); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 20px 0; border: 1px solid rgba(212, 175, 55, 0.3);">
+                                <span style="color: var(--gold); font-size: 14px; letter-spacing: 2px;">📹 VIDEO COMING SOON</span>
+                            </div>
+                            <p style="color: #999;">Experience the story through cinematic visuals.</p>
+                        </div>
+                    `
+                };
+                tabContentEl.innerHTML = tabContent[mode] || tabContent['read'];
+            }
+        }
+        
+        function filterContent(el) { 
+            document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active')); 
+            el.classList.add('active'); 
+        }
+        
+        function flipPerspective(el) {
+            const textEl = el.querySelector('.perspective-text');
+            const isFlipped = el.getAttribute('data-flipped') === 'true';
+            
+            gsap.to(el, {
+                boxShadow: '0 0 40px rgba(212, 175, 55, 0.8), inset 0 0 20px rgba(212, 175, 55, 0.4)',
+                borderColor: 'var(--gold)',
+                duration: 0.3,
+                yoyo: true,
+                repeat: 1
+            });
+            
+            gsap.to(textEl, {
+                opacity: 0, 
+                rotationY: 90,
+                duration: 0.3, 
+                onComplete: () => {
+                    textEl.textContent = isFlipped ? el.getAttribute('data-original') : el.getAttribute('data-alt');
+                    el.setAttribute('data-flipped', !isFlipped);
+                    gsap.to(textEl, {opacity: 1, rotationY: 0, duration: 0.3});
+                }
+            });
+        }
+        
+        function expandCard(card) {
+            const allCards = document.querySelectorAll('.alchemy-card');
+            const isExpanded = card.classList.contains('expanded');
+            
+            allCards.forEach(c => c.classList.remove('expanded'));
+            
+            if(!isExpanded) {
+                card.classList.add('expanded');
+            }
+        }
 
+        const cursor = document.getElementById('cursor'); 
+        const ring = document.getElementById('cursor-ring');
+        let mouseX = 0, mouseY = 0;
+        let isHoveringPortal = false;
+        
         document.addEventListener('mousemove', e => { 
-            gsap.to(cursor, {x: e.clientX, y: e.clientY, duration: 0.1});
-            gsap.to(ring, {x: e.clientX, y: e.clientY, duration: 0.3});
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            gsap.to(cursor, {x: mouseX, y: mouseY, duration: 0.1});
+            gsap.to(ring, {x: mouseX, y: mouseY, duration: 0.3});
+        });
+        
+        document.querySelectorAll('button, .hotspot, .tab, .tag').forEach(el => { 
+            el.addEventListener('mouseenter', () => {
+                document.body.classList.add('hovering');
+                if(el.classList.contains('hotspot')) isHoveringPortal = true;
+            }); 
+            el.addEventListener('mouseleave', () => {
+                document.body.classList.remove('hovering');
+                if(el.classList.contains('hotspot')) isHoveringPortal = false;
+            }); 
         });
 
-        // Basic Particle System
         const canvas = document.getElementById('entrance-canvas'); 
         const ctx = canvas.getContext('2d');
         let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.onresize = resize; resize();
-
-        class P {
-            constructor() { this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.v={x:(Math.random()-0.5),y:(Math.random()-0.5)}; }
-            draw() { ctx.fillStyle='rgba(212,175,55,0.3)'; ctx.beginPath(); ctx.arc(this.x,this.y,2,0,Math.PI*2); ctx.fill(); }
-            update() { this.x+=this.v.x; this.y+=this.v.y; if(this.x<0||this.x>canvas.width)this.v.x*=-1; if(this.y<0||this.y>canvas.height)this.v.y*=-1; }
+        
+        function resizeCanvas() { 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
         }
-        function initParticles(){ for(let i=0;i<50;i++) particles.push(new P()); }
-        function animateParticles(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animateParticles); }
+        resizeCanvas(); 
+        window.addEventListener('resize', resizeCanvas);
+        
+        class Particle {
+            constructor() { 
+                this.x = Math.random() * canvas.width; 
+                this.y = Math.random() * canvas.height; 
+                this.vx = (Math.random() - 0.5) * 0.8; 
+                this.vy = (Math.random() - 0.5) * 0.8; 
+                this.size = Math.random() * 3 + 1; 
+                this.opacity = Math.random() * 0.6 + 0.3;
+                this.color = ['rgba(212, 175, 55,', 'rgba(0, 242, 255,', 'rgba(255, 0, 255,', 'rgba(255, 94, 0,', 'rgba(0, 255, 55,'][Math.floor(Math.random() * 5)];
+            }
+            update() { 
+                if(isHoveringPortal) {
+                    const dx = mouseX - this.x;
+                    const dy = mouseY - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if(distance < 200) {
+                        this.vx += dx * 0.0001;
+                        this.vy += dy * 0.0001;
+                    }
+                }
+                
+                this.x += this.vx; 
+                this.y += this.vy; 
+                
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+                
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1; 
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1; 
+            }
+            draw() { 
+                ctx.beginPath(); 
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                ctx.fillStyle = `${this.color} ${this.opacity})`; 
+                ctx.fill(); 
+                
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color + ' 0.8)';
+            }
+        }
+        
+        function initParticles(){ 
+            particles=[]; 
+            for(let i=0;i<80;i++) particles.push(new Particle()); 
+        }
+        
+        function animateParticles(){ 
+            ctx.clearRect(0,0,canvas.width,canvas.height); 
+            particles.forEach(p=>{
+                p.update();
+                p.draw();
+            }); 
+            requestAnimationFrame(animateParticles); 
+        }
     </script>
 </body>
 </html>
