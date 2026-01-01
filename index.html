@@ -120,7 +120,7 @@
             width: 100%; 
             height: 100%; 
             z-index: 0; 
-            background: url('assets/home_concept.jpg') no-repeat center center; 
+            background: url('/assets/home_concept.jpg') no-repeat center center; 
             background-size: cover; 
         }
 
@@ -170,7 +170,7 @@
             opacity: 0; 
             cursor: pointer;
             z-index: 9999; 
-            pointer-events: none;
+            pointer-events: auto !important;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             background: rgba(0, 0, 0, 0.7); 
             border: 4px solid currentColor; 
@@ -211,17 +211,32 @@
             filter: brightness(1.2);
         }
 
-        /* POSITIONING - Aligned with background image */
+        /* POSITIONING */
         #screen-left-top { top: 12%; left: 8%; }
         #screen-left-bot { bottom: 30%; left: 1%; }
         #screen-right-top { top: 20%; right: 12%; }
         #screen-right-bot { bottom: 20%; right: 4%; }
-        #screen-yinyang { top: 18%; right: 20%; width: 180px; height: 180px; }
+        #screen-yinyang { top: 15%; right: 22%; }
+
+        /* === CENTER CIRCLE - TRANSPARENT === */
+        #screen-center {
+            top: 38%; 
+            left: 50%; 
+            width: 380px; 
+            height: 380px; 
+            transform: translate(-50%, -50%);
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+        }
 
         /* TEXT STYLING */
         .hotspot-title { 
             font-family: 'MedievalSharp', cursive; 
-            font-size: clamp(18px, 3vw, 24px);
+            font-size: 26px; 
             font-weight: bold;
             margin-bottom: 8px; 
             pointer-events: none; 
@@ -231,7 +246,7 @@
         } 
         .hotspot-subtitle { 
             font-family: 'MedievalSharp', cursive; 
-            font-size: clamp(11px, 2vw, 13px);
+            font-size: 14px; 
             letter-spacing: 2px; 
             pointer-events: none; 
             color: inherit; 
@@ -448,62 +463,6 @@
             0%, 100% { opacity: 0.6; transform: scale(1); } 
             50% { opacity: 1; transform: scale(1.02); } 
         }
-        
-        /* === MOBILE RESPONSIVE === */
-        @media (max-width: 768px) {
-            .begin-text {
-                font-size: 18px;
-                padding: 15px 30px;
-            }
-            
-            .hotspot {
-                width: 140px;
-                height: 140px;
-                position: relative !important;
-                margin: 15px auto;
-                top: auto !important;
-                left: auto !important;
-                right: auto !important;
-                bottom: auto !important;
-            }
-            
-            #studio-layer {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                padding: 20px;
-                overflow-y: auto;
-            }
-            
-            .bg-layer {
-                position: fixed;
-            }
-            
-            #entrance-canvas {
-                display: none;
-            }
-            
-            .overlay-content {
-                padding: 30px 20px;
-            }
-            
-            .whisper {
-                font-size: 16px;
-            }
-            
-            .story-title {
-                font-size: 26px;
-            }
-            
-            * {
-                cursor: auto !important;
-            }
-            
-            #cursor, #cursor-ring {
-                display: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -512,19 +471,19 @@
     <div id="begin-overlay" onclick="startSequence()">
         <div class="begin-text">CLICK TO ENTER THE SPARK</div>
     </div>
-    <audio id="bg-music"><source src="assets/music.mp3" type="audio/mp3"></audio>
+    <audio id="bg-music"><source src="/assets/music.mp3" type="audio/mp3"></audio>
 
     <div id="stage-1" class="stage active">
-        <video id="vid-1" muted playsinline><source src="assets/LOGOVID1.mp4" type="video/mp4"></video>
+        <video id="vid-1" muted playsinline><source src="/assets/LOGOVID1.mp4" type="video/mp4"></video>
     </div>
     <div id="stage-2" class="stage">
-        <video id="vid-2" muted playsinline><source src="assets/entrance.mp4" type="video/mp4"></video>
+        <video id="vid-2" muted playsinline><source src="/assets/entrance.mp4" type="video/mp4"></video>
     </div>
     <div id="stage-3" class="stage">
-        <img src="assets/LOUM.jpeg" alt="Louman">
+        <img src="/assets/LOUM.jpeg" alt="Louman">
     </div>
     <div id="stage-4" class="stage">
-        <video id="vid-4" playsinline><source src="assets/intro.mp4" type="video/mp4"></video>
+        <video id="vid-4" playsinline><source src="/assets/intro.mp4" type="video/mp4"></video>
         <button id="skip-btn" onclick="skipIntro()">SKIP INTRO</button>
     </div>
 
@@ -532,8 +491,10 @@
         <canvas id="entrance-canvas"></canvas>
         <div class="bg-layer"></div>
 
+        <div id="screen-center" class="hotspot"></div>
+
         <div id="screen-yinyang" class="hotspot" onclick="openOverlay('host')">
-            <div class="hotspot-title" style="font-size: 20px;">Live Sessions</div>
+            <div class="hotspot-title" style="font-size: 22px;">Live Sessions</div>
             <div class="hotspot-subtitle">with Louman</div>
         </div>
 
@@ -560,6 +521,7 @@
     </div>
 
     <script>
+        // === SIMPLE SEQUENCE ===
         const music = document.getElementById('bg-music');
         function startSequence() {
             document.getElementById('begin-overlay').style.display = 'none';
@@ -600,9 +562,6 @@
             document.getElementById('stage-4').style.display = 'none'; 
             document.getElementById('studio-layer').classList.add('active');
             gsap.to(music, {volume: 0.5, duration: 2});
-            
-            document.querySelectorAll('.hotspot').forEach(h => h.style.pointerEvents = 'auto');
-            
             gsap.to('.hotspot', {
                 opacity: 1, 
                 duration: 1.2, 
@@ -623,6 +582,7 @@
             animateParticles();
         }
 
+        // === CONTENT DATA ===
         const contentData = {
             'gallery': `
                 <div class="filter-tags">
@@ -654,25 +614,13 @@
             'library': `
                 <div class="section-label">SENSiiii LIBRARY</div>
                 <div class="whisper">"What if I failed?" → "What if you succeeded?"</div>
-                <div class="insight-box">The Library contains perspective pairs that shift fixation into fluidity. Each question reveals where someone is stuck—and offers the view from the other side. <strong style="color: var(--gold);">Click any card to flip the perspective.</strong></div>
-                <div class="section-label" style="margin-top: 40px;">PERSPECTIVE PAIRS</div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 25px;">
-                    <div class="insight-box" style="cursor: pointer; position: relative;" onclick="flipPerspective(this)" data-original="What if I fail?" data-alt="What if I succeed?" data-flipped="false">
-                        <div class="perspective-text" style="font-size: 18px; color: var(--gold); font-weight: 600;">What if I fail?</div>
-                        <div style="font-size: 11px; margin-top: 10px; opacity: 0.6;">Click to shift perspective →</div>
-                    </div>
-                    <div class="insight-box" style="cursor: pointer;" onclick="flipPerspective(this)" data-original="What if they reject me?" data-alt="What if they embrace me?" data-flipped="false">
-                        <div class="perspective-text" style="font-size: 18px; color: var(--gold); font-weight: 600;">What if they reject me?</div>
-                        <div style="font-size: 11px; margin-top: 10px; opacity: 0.6;">Click to shift perspective →</div>
-                    </div>
-                    <div class="insight-box" style="cursor: pointer;" onclick="flipPerspective(this)" data-original="What if I'm not ready?" data-alt="What if I'm more ready than I think?" data-flipped="false">
-                        <div class="perspective-text" style="font-size: 18px; color: var(--gold); font-weight: 600;">What if I'm not ready?</div>
-                        <div style="font-size: 11px; margin-top: 10px; opacity: 0.6;">Click to shift perspective →</div>
-                    </div>
-                    <div class="insight-box" style="cursor: pointer;" onclick="flipPerspective(this)" data-original="What if I lose everything?" data-alt="What if I gain everything?" data-flipped="false">
-                        <div class="perspective-text" style="font-size: 18px; color: var(--gold); font-weight: 600;">What if I lose everything?</div>
-                        <div style="font-size: 11px; margin-top: 10px; opacity: 0.6;">Click to shift perspective →</div>
-                    </div>
+                <div class="insight-box">The Library contains perspective pairs that shift fixation into fluidity. Each question reveals where someone is stuck—and offers the view from the other side.</div>
+                <div class="section-label" style="margin-top: 40px;">PERSPECTIVE CATEGORIES</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 25px;">
+                    <div class="insight-box"><strong style="color: var(--gold);">What If...</strong><br><span style="font-size: 13px; opacity: 0.7;">Curiosity & Possibility</span></div>
+                    <div class="insight-box"><strong style="color: var(--gold);">Fear & Vulnerability</strong><br><span style="font-size: 13px; opacity: 0.7;">Success & Strength</span></div>
+                    <div class="insight-box"><strong style="color: var(--gold);">Love & Connection</strong><br><span style="font-size: 13px; opacity: 0.7;">Loss & Longing</span></div>
+                    <div class="insight-box"><strong style="color: var(--gold);">Identity & Meaning</strong><br><span style="font-size: 13px; opacity: 0.7;">Purpose & Place</span></div>
                 </div>
             `,
             'blog': `
@@ -694,160 +642,8 @@
             `,
             'sensi': `
                 <div class="section-label">SENSiiii CREATIONS</div>
-                <div class="whisper">The formula in action. Each creation is a Spark made manifest.</div>
-                <div class="insight-box">Click any card to reveal the alchemy behind it.</div>
-                
-                <div style="margin-top: 50px; position: relative; min-height: 400px;">
-                    <div class="alchemical-deck">
-                        <div class="alchemy-card" style="--index: 0;" onclick="expandCard(this)">
-                            <div class="card-number">01</div>
-                            <div class="card-title">The Mirror Method</div>
-                            <div class="card-type">PERSONAL TRANSFORMATION</div>
-                            <div class="card-expanded">
-                                <p style="margin: 20px 0; line-height: 1.8;">A reflective practice that turns self-doubt into self-discovery. Created for a client who couldn't see their own potential.</p>
-                                <div style="padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 15px;">
-                                    <strong style="color: var(--gold);">The Spark:</strong> "What if the thing I'm running from is what I need most?"
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="alchemy-card" style="--index: 1;" onclick="expandCard(this)">
-                            <div class="card-number">02</div>
-                            <div class="card-title">Fluid Identity Framework</div>
-                            <div class="card-type">BUSINESS STRATEGY</div>
-                            <div class="card-expanded">
-                                <p style="margin: 20px 0; line-height: 1.8;">A strategic approach that helps brands stay authentic while evolving. For companies stuck between who they were and who they're becoming.</p>
-                                <div style="padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 15px;">
-                                    <strong style="color: var(--gold);">The Spark:</strong> "What if consistency isn't staying the same?"
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="alchemy-card" style="--index: 2;" onclick="expandCard(this)">
-                            <div class="card-number">03</div>
-                            <div class="card-title">The Resonance Ritual</div>
-                            <div class="card-type">CREATIVE PRACTICE</div>
-                            <div class="card-expanded">
-                                <p style="margin: 20px 0; line-height: 1.8;">A daily practice for artists and creators to find their authentic voice. Born from a conversation about creative block.</p>
-                                <div style="padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 15px;">
-                                    <strong style="color: var(--gold);">The Spark:</strong> "What if inspiration isn't something you wait for?"
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="alchemy-card" style="--index: 3;" onclick="expandCard(this)">
-                            <div class="card-number">04</div>
-                            <div class="card-title">The Threshold Experience</div>
-                            <div class="card-type">LIFE TRANSITIONS</div>
-                            <div class="card-expanded">
-                                <p style="margin: 20px 0; line-height: 1.8;">A guided journey through major life changes. Created for those standing at the edge of something new.</p>
-                                <div style="padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 15px;">
-                                    <strong style="color: var(--gold);">The Spark:</strong> "What if the ending is also a beginning?"
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <style>
-                    .alchemical-deck {
-                        position: relative;
-                        width: 100%;
-                        max-width: 600px;
-                        margin: 0 auto;
-                        perspective: 1000px;
-                    }
-                    
-                    .alchemy-card {
-                        position: absolute;
-                        width: 100%;
-                        padding: 30px;
-                        background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(40, 40, 40, 0.95));
-                        border: 2px solid rgba(212, 175, 55, 0.3);
-                        border-radius: 15px;
-                        cursor: pointer;
-                        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                        transform-origin: bottom center;
-                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-                    }
-                    
-                    .alchemy-card:not(.expanded) {
-                        top: calc(var(--index) * 25px);
-                        transform: translateY(calc(var(--index) * -5px)) scale(calc(1 - var(--index) * 0.05));
-                        opacity: calc(1 - var(--index) * 0.15);
-                        z-index: calc(10 - var(--index));
-                    }
-                    
-                    .alchemy-card.expanded {
-                        position: relative;
-                        top: 0;
-                        transform: translateY(0) scale(1.05);
-                        z-index: 100;
-                        box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
-                        border-color: var(--gold);
-                    }
-                    
-                    .alchemy-card:hover:not(.expanded) {
-                        transform: translateY(calc(var(--index) * -5px - 10px)) scale(calc(1 - var(--index) * 0.05));
-                        border-color: rgba(212, 175, 55, 0.6);
-                    }
-                    
-                    .card-number {
-                        position: absolute;
-                        top: 15px;
-                        right: 20px;
-                        font-family: 'Cinzel', serif;
-                        font-size: 48px;
-                        color: rgba(212, 175, 55, 0.2);
-                        font-weight: 700;
-                    }
-                    
-                    .card-title {
-                        font-family: 'Cinzel', serif;
-                        font-size: 26px;
-                        color: var(--gold);
-                        margin-bottom: 10px;
-                    }
-                    
-                    .card-type {
-                        font-size: 11px;
-                        letter-spacing: 3px;
-                        color: rgba(255, 255, 255, 0.5);
-                        text-transform: uppercase;
-                        margin-bottom: 15px;
-                    }
-                    
-                    .card-expanded {
-                        max-height: 0;
-                        overflow: hidden;
-                        opacity: 0;
-                        transition: all 0.5s ease;
-                    }
-                    
-                    .alchemy-card.expanded .card-expanded {
-                        max-height: 500px;
-                        opacity: 1;
-                        margin-top: 20px;
-                    }
-                    
-                    @media (max-width: 768px) {
-                        .alchemical-deck {
-                            max-width: 100%;
-                        }
-                        
-                        .alchemy-card {
-                            padding: 20px;
-                        }
-                        
-                        .card-title {
-                            font-size: 20px;
-                        }
-                        
-                        .card-number {
-                            font-size: 36px;
-                        }
-                    }
-                </style>
+                <div class="whisper">The formula in action.</div>
+                <div class="insight-box">Coming soon... The full collection of sparked creations.</div>
             `
         };
 
@@ -859,123 +655,34 @@
                 { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, delay: 0.3, ease: "power2.out" }
             );
             document.getElementById('alchemy-overlay').classList.add('open');
-            gsap.to(music, {volume: 0.2, duration: 1});
         }
-        
         function closeOverlay() { 
-            document.getElementById('alchemy-overlay').classList.remove('open');
-            gsap.to(music, {volume: 0.5, duration: 1});
-            const bgLayer = document.querySelector('.bg-layer');
-            gsap.to(bgLayer, {filter: 'grayscale(0) brightness(1)', duration: 1});
+            document.getElementById('alchemy-overlay').classList.remove('open'); 
         }
-        
-        function switchTab(el, mode) { 
+        function switchTab(el) { 
             document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); 
-            el.classList.add('active');
-            
-            const bgLayer = document.querySelector('.bg-layer');
-            if(mode === 'listen' || mode === 'watch') {
-                gsap.to(bgLayer, {filter: 'grayscale(0.7) brightness(0.6)', duration: 1});
-            } else {
-                gsap.to(bgLayer, {filter: 'grayscale(0) brightness(1)', duration: 1});
-            }
-            
-            const tabContentEl = document.getElementById('tab-content');
-            if(tabContentEl) {
-                const tabContent = {
-                    'read': `
-                        <h1 class="story-title">The Waterfall That Waited</h1>
-                        <div style="line-height: 1.9; color: #ccc;">
-                            He walked into the water. The cold hit him like a shock. And the voice said: "You didn't need magic. You needed a mirror."<br><br>
-                            The waterfall remembered his footsteps. It listened as he approached. Not with ears—but with soft water and morning light.
-                        </div>
-                    `,
-                    'listen': `
-                        <h1 class="story-title">Audio Experience</h1>
-                        <div style="text-align: center; padding: 40px;">
-                            <div style="width: 100%; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 40px; display: flex; align-items: center; justify-content: center; margin: 20px 0;">
-                                <span style="color: var(--gold); font-size: 14px; letter-spacing: 2px;">🎧 AUDIO PLAYER COMING SOON</span>
-                            </div>
-                            <p style="color: #999; margin-top: 20px;">Listen to the story narrated with ambient soundscapes.</p>
-                        </div>
-                    `,
-                    'watch': `
-                        <h1 class="story-title">Visual Journey</h1>
-                        <div style="text-align: center; padding: 40px;">
-                            <div style="width: 100%; height: 300px; background: rgba(0, 0, 0, 0.5); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 20px 0; border: 1px solid rgba(212, 175, 55, 0.3);">
-                                <span style="color: var(--gold); font-size: 14px; letter-spacing: 2px;">📹 VIDEO COMING SOON</span>
-                            </div>
-                            <p style="color: #999;">Experience the story through cinematic visuals.</p>
-                        </div>
-                    `
-                };
-                tabContentEl.innerHTML = tabContent[mode] || tabContent['read'];
-            }
+            el.classList.add('active'); 
         }
-        
         function filterContent(el) { 
             document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active')); 
             el.classList.add('active'); 
         }
-        
-        function flipPerspective(el) {
-            const textEl = el.querySelector('.perspective-text');
-            const isFlipped = el.getAttribute('data-flipped') === 'true';
-            
-            gsap.to(el, {
-                boxShadow: '0 0 40px rgba(212, 175, 55, 0.8), inset 0 0 20px rgba(212, 175, 55, 0.4)',
-                borderColor: 'var(--gold)',
-                duration: 0.3,
-                yoyo: true,
-                repeat: 1
-            });
-            
-            gsap.to(textEl, {
-                opacity: 0, 
-                rotationY: 90,
-                duration: 0.3, 
-                onComplete: () => {
-                    textEl.textContent = isFlipped ? el.getAttribute('data-original') : el.getAttribute('data-alt');
-                    el.setAttribute('data-flipped', !isFlipped);
-                    gsap.to(textEl, {opacity: 1, rotationY: 0, duration: 0.3});
-                }
-            });
-        }
-        
-        function expandCard(card) {
-            const allCards = document.querySelectorAll('.alchemy-card');
-            const isExpanded = card.classList.contains('expanded');
-            
-            allCards.forEach(c => c.classList.remove('expanded'));
-            
-            if(!isExpanded) {
-                card.classList.add('expanded');
-            }
-        }
 
+        // === ENHANCED CURSOR ===
         const cursor = document.getElementById('cursor'); 
         const ring = document.getElementById('cursor-ring');
-        let mouseX = 0, mouseY = 0;
-        let isHoveringPortal = false;
         
         document.addEventListener('mousemove', e => { 
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            gsap.to(cursor, {x: mouseX, y: mouseY, duration: 0.1});
-            gsap.to(ring, {x: mouseX, y: mouseY, duration: 0.3});
+            gsap.to(cursor, {x: e.clientX, y: e.clientY, duration: 0.1});
+            gsap.to(ring, {x: e.clientX, y: e.clientY, duration: 0.3});
         });
         
         document.querySelectorAll('button, .hotspot, .tab, .tag').forEach(el => { 
-            el.addEventListener('mouseenter', () => {
-                document.body.classList.add('hovering');
-                if(el.classList.contains('hotspot')) isHoveringPortal = true;
-            }); 
-            el.addEventListener('mouseleave', () => {
-                document.body.classList.remove('hovering');
-                if(el.classList.contains('hotspot')) isHoveringPortal = false;
-            }); 
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering')); 
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering')); 
         });
 
+        // === ENHANCED PARTICLES ===
         const canvas = document.getElementById('entrance-canvas'); 
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -998,22 +705,8 @@
                 this.color = ['rgba(212, 175, 55,', 'rgba(0, 242, 255,', 'rgba(255, 0, 255,', 'rgba(255, 94, 0,', 'rgba(0, 255, 55,'][Math.floor(Math.random() * 5)];
             }
             update() { 
-                if(isHoveringPortal) {
-                    const dx = mouseX - this.x;
-                    const dy = mouseY - this.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if(distance < 200) {
-                        this.vx += dx * 0.0001;
-                        this.vy += dy * 0.0001;
-                    }
-                }
-                
                 this.x += this.vx; 
                 this.y += this.vy; 
-                
-                this.vx *= 0.98;
-                this.vy *= 0.98;
-                
                 if (this.x < 0 || this.x > canvas.width) this.vx *= -1; 
                 if (this.y < 0 || this.y > canvas.height) this.vy *= -1; 
             }
@@ -1023,6 +716,7 @@
                 ctx.fillStyle = `${this.color} ${this.opacity})`; 
                 ctx.fill(); 
                 
+                // Glow effect
                 ctx.shadowBlur = 15;
                 ctx.shadowColor = this.color + ' 0.8)';
             }
